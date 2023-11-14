@@ -30,6 +30,11 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/alojamientos', alojamientoRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Ruta raíz
+app.get('/', (req, res) => {
+    res.send('¡El servidor está funcionando correctamente!');
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Servidor funcionando en el puerto ${PORT}`);
