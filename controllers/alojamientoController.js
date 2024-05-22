@@ -165,21 +165,31 @@ const subirFotoLink = async (req, res) => {
     }
 }
 
-const fotosMiddleware = multer({dest: 'uploads/'});
+const fotosMiddleware = multer({ dest: 'uploads/' });
+
 const subirFotoDispositivo = async (req, res) => {
+    console.log(req.files);
     const uploadedFiles = [];
+    
     for (let i = 0; i < req.files.length; i++) {
         // Obtenemos atributos path y originalname de files
-        const {path, originalname} = req.files[i];
+        const { path, originalname } = req.files[i];
         const partes = originalname.split('.');
-        const ext = partes[1];
-        const nuevoPath = path + '.' + ext;
+        const ext = partes[partes.length - 1]; // Obtiene la extensión correcta
+        
+        // Generamos un nuevo nombre de archivo con UUID
+        const nuevoNombre = generarId() + '.' + ext;
+        const nuevoPath = `uploads/${nuevoNombre}`;
+        
+        // Renombramos el archivo
         fs.renameSync(path, nuevoPath);
-        // utilizo .replace para remplazar "uploads/" por ""
-        uploadedFiles.push(nuevoPath.replace('uploads/', ''));
+        
+        // Guardamos el nuevo nombre del archivo
+        uploadedFiles.push(nuevoNombre);
     }
+    
     res.json(uploadedFiles);
-}
+};
 
 // Función para actualizar el contacto en los alojamientos al modificar el perfil
 const actualizarContactoAlojamiento = async (req, res) => {
